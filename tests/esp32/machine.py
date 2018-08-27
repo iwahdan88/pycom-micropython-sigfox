@@ -13,7 +13,7 @@ machine.idle()
 if machine.freq() < 80000000 or machine.freq() > 240000000:
     print("CPU frequency out of range")
 
-print(machine.unique_id() == wifi.mac())
+print(machine.unique_id() == wifi.mac()[0])
 
 machine.main('main.py')
 

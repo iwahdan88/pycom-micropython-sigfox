@@ -2317,9 +2317,11 @@ STATIC const mp_map_elem_t lora_locals_dict_table[] = {
     { MP_OBJ_NEW_QSTR(MP_QSTR_nvram_save),          (mp_obj_t)&lora_nvram_save_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_nvram_restore),       (mp_obj_t)&lora_nvram_restore_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_nvram_erase),         (mp_obj_t)&lora_nvram_erase_obj },
-    { MP_OBJ_NEW_QSTR(MP_QSTR_mesh),                     (mp_obj_t)&lora_mesh_obj },
-      { MP_OBJ_NEW_QSTR(MP_QSTR_cli),                       (mp_obj_t)&lora_cli_obj },
+    { MP_OBJ_NEW_QSTR(MP_QSTR_mesh),                (mp_obj_t)&lora_mesh_obj },
+    { MP_OBJ_NEW_QSTR(MP_QSTR_cli),                 (mp_obj_t)&lora_cli_obj },
 
+    // exceptions
+    { MP_OBJ_NEW_QSTR(MP_QSTR_timeout),             (mp_obj_t)&mp_type_TimeoutError },
 
     // class constants
     { MP_OBJ_NEW_QSTR(MP_QSTR_LORA),                MP_OBJ_NEW_SMALL_INT(E_LORA_STACK_MODE_LORA) },

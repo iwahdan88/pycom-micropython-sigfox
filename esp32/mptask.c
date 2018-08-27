@@ -82,6 +82,7 @@
 
 #include "lfs.h"
 #include "sflash_diskio_littlefs.h"
+#include "lteppp.h"
 
 
 /******************************************************************************
@@ -278,6 +279,10 @@ soft_reset:
     if (!soft_reset) {
     #if defined(GPY) || defined (FIPY)
         modlte_init0();
+        if(config_get_lte_modem_enable_on_boot())
+        {
+        	lteppp_connect_modem();
+        }
     #endif
     }
 
@@ -632,8 +637,21 @@ STATIC void mptask_enable_wifi_ap (void) {
 	uint8_t wifi_pwd[64];
 	config_get_wifi_pwd(wifi_pwd);
 
-    wlan_setup (WIFI_MODE_AP, (wifi_ssid[0]==0x00) ? DEFAULT_AP_SSID : (const char*) wifi_ssid, WIFI_AUTH_WPA2_PSK, (wifi_pwd[0]==0x00) ? DEFAULT_AP_PASSWORD : (const char*) wifi_pwd ,
-                DEFAULT_AP_CHANNEL, ANTENNA_TYPE_INTERNAL, (wifi_ssid[0]==0x00) ? true:false, false, WIFI_BW_HT40);
+    wlan_internal_setup_t setup = {
+    		WIFI_MODE_AP,
+			(wifi_ssid[0]==0x00) ? DEFAULT_AP_SSID : (const char*) wifi_ssid,
+			(wifi_pwd[0]==0x00) ? DEFAULT_AP_PASSWORD : (const char*) wifi_pwd,
+			(uint32_t)WIFI_AUTH_WPA2_PSK,
+			DEFAULT_AP_CHANNEL,
+			ANTENNA_TYPE_INTERNAL,
+			(wifi_ssid[0]==0x00) ? true:false,
+			false,
+			WIFI_BW_HT40,
+			NULL,
+			NULL
+    };
+
+    wlan_setup (&setup);
     mod_network_register_nic(&wlan_obj);
 }
 

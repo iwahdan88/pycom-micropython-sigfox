@@ -35,6 +35,14 @@ typedef struct _wlan_wpa2_ent_obj_t {
     const char *username;
 } wlan_wpa2_ent_obj_t;
 
+typedef enum
+{
+	WLAN_PHY_11_B = 1,
+	WLAN_PHY_11_G,
+	WLAN_PHY_11_N,
+	WLAN_PHY_LOW_RATE
+}_wlan_protocol_t;
+
 typedef struct _wlan_obj_t {
     mp_obj_base_t           base;
     wlan_wpa2_ent_obj_t     wpa2_ent;
@@ -51,23 +59,46 @@ typedef struct _wlan_obj_t {
     uint8_t                 auth;
     uint8_t                 channel;
     uint8_t                 antenna;
+    int8_t					max_tx_pwr;
 
     // my own ssid, key and mac
     uint8_t                 ssid[(MODWLAN_SSID_LEN_MAX + 1)];
     uint8_t                 key[65];
     uint8_t                 mac[6];
+    uint8_t                 mac_ap[6];
     uint8_t                 hostname[TCPIP_HOSTNAME_MAX_SIZE];
 
     // the sssid (or name) and mac of the other device
     uint8_t                 ssid_o[33];
     uint8_t                 bssid[6];
+
     uint8_t                 irq_flags;
     bool                    irq_enabled;
     bool                    enable_servers;
     bool                    disconnected;
+    bool                    soft_ap_stopped;
+    bool                    sta_stopped;
     bool                    pwrsave;
     bool                    started;
+    bool 					is_promiscuous;
 } wlan_obj_t;
+
+#pragma pack(1)
+typedef struct wlan_internal_setup_t
+{
+	int32_t 			mode;
+	const char * 		ssid;
+	const char *		key;
+	uint32_t 			auth;
+	uint32_t 			channel;
+	uint32_t 			antenna;
+	bool 				add_mac;
+	bool 				hidden;
+	wifi_bandwidth_t 	bandwidth;
+	wifi_country_t*		country;
+	int8_t*				max_tx_pr;
+}wlan_internal_setup_t;
+#pragma pack()
 
 /******************************************************************************
  DECLARE PUBLIC DATA
@@ -78,12 +109,9 @@ extern wlan_obj_t wlan_obj;
  DECLARE PUBLIC FUNCTIONS
  ******************************************************************************/
 extern void wlan_pre_init (void);
-extern void wlan_setup (int32_t mode, const char *ssid, uint32_t auth, const char *key, uint32_t channel, uint32_t antenna, bool add_mac, bool ssid_hidden, wifi_bandwidth_t bandwidth);
+extern void wlan_setup (wlan_internal_setup_t * config);
 extern void wlan_update(void);
 extern void wlan_get_mac (uint8_t *macAddress);
-extern void wlan_get_ip (uint32_t *ip);
-extern bool wlan_is_connected (void);
-extern void wlan_set_current_time (uint32_t seconds_since_2000);
 extern void wlan_off_on (void);
 extern mp_obj_t wlan_deinit(mp_obj_t self_in);
 extern void wlan_resume (bool reconnect);
