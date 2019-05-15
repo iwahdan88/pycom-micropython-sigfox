@@ -9,7 +9,7 @@
 
 #ifndef MPERROR_H_
 #define MPERROR_H_
-
+#ifndef RGB_LED_DISABLE
 #ifndef BOOTLOADER_BUILD
 extern const mp_obj_type_t pyb_heartbeat_type;
 extern void NORETURN __fatal_error(const char *msg);
@@ -30,4 +30,11 @@ bool mperror_is_heartbeat_enabled (void);
 bool mperror_heartbeat_disable_done (void);
 void mperror_set_rgb_color(uint32_t rgbcolor);
 
+#else
+
+#ifndef BOOTLOADER_BUILD
+extern void NORETURN __fatal_error(const char *msg);
+#endif
+
+#endif //RGB_LED_DISABLE
 #endif // MPERROR_H_
