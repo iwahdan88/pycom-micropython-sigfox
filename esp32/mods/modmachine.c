@@ -188,7 +188,9 @@ STATIC mp_obj_t machine_sleep (void) {
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(machine_sleep_obj, machine_sleep);
 
 STATIC mp_obj_t machine_deepsleep (uint n_args, const mp_obj_t *arg) {
+#ifndef RGB_LED_DISABLE
     mperror_enable_heartbeat(false);
+#endif
     bt_deinit(NULL);
     wlan_deinit(NULL);
 #if defined(FIPY) || defined(GPY)
