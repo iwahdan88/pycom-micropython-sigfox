@@ -105,6 +105,7 @@ void connect_lte_uart (void) {
     config.stop_bits = UART_STOP_BITS_1;
     config.flow_ctrl = UART_HW_FLOWCTRL_CTS_RTS;
     config.rx_flow_ctrl_thresh = 64;
+    config.use_ref_tick = false;
     uart_param_config(LTE_UART_ID, &config);
 
     // configure the UART pins
